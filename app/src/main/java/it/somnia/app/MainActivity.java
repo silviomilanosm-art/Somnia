@@ -31,7 +31,7 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
   void base(){ScrollView sc=new ScrollView(this);sc.setFillViewport(true);sc.setBackground(bg(0xff101a43,0xff514ba3,0));page=vertical();page.setPadding(dp(20),dp(22),dp(20),dp(28));sc.addView(page);setContentView(sc);}
   TextView pill(String s,int top,int bottom,int color){TextView t=label(s,16,color,true);t.setGravity(Gravity.CENTER);t.setPadding(dp(14),dp(18),dp(14),dp(18));t.setBackground(bg(top,bottom,22));return t;}
   void add(LinearLayout l,View v){l.addView(v,new LinearLayout.LayoutParams(-1,-2));}
-  void header(){TextView flower=label("✦  S O M N I A  ✦",30,WHITE,true);flower.setGravity(Gravity.CENTER);add(page,flower);TextView sub=label("La Palestra del Sonno",16,0xffd9e0ff,false);sub.setGravity(Gravity.CENTER);add(page,sub);gap(page,22);}
+  void header(){TextView flower=label("✦  S O M N I A  ✦",30,WHITE,true);flower.setGravity(Gravity.CENTER);add(page,flower);TextView sub=label("La Palestra del Respiro",16,0xffd9e0ff,false);sub.setGravity(Gravity.CENTER);add(page,sub);gap(page,22);}
   void showHome(){
     inExercise=false;base();header();
     LinearLayout welcome=vertical();pad(welcome,22);welcome.setBackground(bg(0xffd7d9ff,0xffb7e3f7,24));
