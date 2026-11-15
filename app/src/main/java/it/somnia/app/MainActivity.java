@@ -32,21 +32,67 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
   TextView pill(String s,int top,int bottom,int color){TextView t=label(s,16,color,true);t.setGravity(Gravity.CENTER);t.setPadding(dp(14),dp(18),dp(14),dp(18));t.setBackground(bg(top,bottom,22));return t;}
   void add(LinearLayout l,View v){l.addView(v,new LinearLayout.LayoutParams(-1,-2));}
   void header(){TextView flower=label("✦  S O M N I A  ✦",30,WHITE,true);flower.setGravity(Gravity.CENTER);add(page,flower);TextView sub=label("La Palestra del Respiro",16,0xffd9e0ff,false);sub.setGravity(Gravity.CENTER);add(page,sub);gap(page,22);}
+
+  LinearLayout tile(String icon,String title,int start,int end,Runnable action){
+    LinearLayout box=vertical();box.setGravity(Gravity.CENTER);box.setPadding(dp(5),dp(12),dp(5),dp(12));box.setBackground(bg(start,end,24));
+    TextView symbol=label(icon,30,WHITE,true);symbol.setGravity(Gravity.CENTER);add(box,symbol);gap(box,5);
+    TextView name=label(title,16,WHITE,true);name.setGravity(Gravity.CENTER);add(box,name);box.setOnClickListener(v->action.run());return box;
+  }
+  void pair(String i,String t,int a,int b,Runnable one,String j,String u,int c,int d,Runnable two){
+    LinearLayout line=new LinearLayout(this);
+    line.addView(tile(i,t,a,b,one),new LinearLayout.LayoutParams(0,dp(120),1));
+    View space=new View(this);line.addView(space,new LinearLayout.LayoutParams(dp(12),1));
+    line.addView(tile(j,u,c,d,two),new LinearLayout.LayoutParams(0,dp(120),1));add(page,line);gap(page,12);
+  }
   void showHome(){
-    inExercise=false;base();header();
-    LinearLayout welcome=vertical();pad(welcome,22);welcome.setBackground(bg(0xffd7d9ff,0xffb7e3f7,24));
-    add(welcome,label("Benvenuto in SOMNIA",23,NAVY,true));gap(welcome,9);
-    add(welcome,label("Un momento di calma, un esercizio alla volta. Segui la guida e osserva i movimenti della lingua.",16,0xff27385d,false));
-    gap(welcome,15);TextView go=pill("▶  Inizia gli esercizi",0xff4169df,0xff7157c6,WHITE);go.setOnClickListener(v->showExercise(0));add(welcome,go);add(page,welcome);
-    gap(page,20);
-    LinearLayout a=vertical();pad(a,20);a.setBackground(bg(0xff746bf0,0xffa27cec,22));
-    add(a,label("👅   Esercizi della lingua",21,WHITE,true));gap(a,6);add(a,label("3 esercizi guidati con schemi anatomici",14,WHITE,false));a.setOnClickListener(v->showExercise(0));add(page,a);
-    gap(page,12);
-    LinearLayout b=vertical();pad(b,18);b.setBackground(bg(0xff148f9d,0xff45cbb6,22));
-    add(b,label("♫   Guida vocale",20,WHITE,true));gap(b,6);add(b,label("Ascolta le istruzioni in italiano durante gli esercizi",14,WHITE,false));b.setOnClickListener(v->showExercise(0));add(page,b);
-    gap(page,20);add(page,label("IL TUO PERCORSO",13,MUTED,true));gap(page,8);
-    TextView progress=pill("Livello 1  ·  Inizia con calma",0xff34457e,0xff5366a6,WHITE);add(page,progress);
-    gap(page,18);add(page,label("Le istruzioni sono educative e non sostituiscono una valutazione sanitaria.",12,MUTED,false));
+    inExercise=false;base();
+    TextView tools=label("♧                                               ⚙",23,WHITE,true);tools.setGravity(Gravity.CENTER);tools.setOnClickListener(v->showSection("Impostazioni"));add(page,tools);gap(page,8);
+    add(page,new MoonLogo(this));gap(page,7);
+    TextView name=label("SOMNIA",40,WHITE,true);name.setGravity(Gravity.CENTER);add(page,name);
+    TextView sub=label("LA PALESTRA DEL RESPIRO",15,WHITE,true);sub.setGravity(Gravity.CENTER);add(page,sub);gap(page,24);
+    pair("◎","Il mio percorso",0xffa93ce7,0xff5d25aa,()->showSection("Il mio percorso"),"♧","Esercizi",0xff009ae1,0xff223eae,()->showExercise(0));
+    pair("▥","Progressi",0xff05b8c8,0xff155e91,()->showSection("Progressi"),"♢","Promemoria",0xffffb85d,0xffbd663f,()->showSection("Promemoria"));
+    pair("▤","Approfondimenti",0xffcf62b3,0xff7c298e,()->showSection("Approfondimenti"),"⚙","Impostazioni",0xff4870d7,0xff40278e,()->showSection("Impostazioni"));
+    bottomNavigation();
+  }
+  void bottomNavigation(){
+    gap(page,12);LinearLayout bar=new LinearLayout(this);bar.setBackground(bg(0xff293b85,0xff111a47,23));
+    String[] names={"⌂\nHome","▦\nPercorso","▷\nEsercizi","▥\nProgressi","♙\nProfilo"};
+    for(int i=0;i<5;i++){final int n=i;TextView t=label(names[i],12,WHITE,false);t.setGravity(Gravity.CENTER);t.setPadding(0,dp(13),0,dp(13));bar.addView(t,new LinearLayout.LayoutParams(0,-2,1));t.setOnClickListener(v->{if(n==0)showHome();else if(n==1)showSection("Il mio percorso");else if(n==2)showExercise(0);else if(n==3)showSection("Progressi");else showSection("Impostazioni");});}
+    add(page,bar);
+  }
+  void showSection(String title){
+    inExercise=false;if(tts!=null)tts.stop();base();
+    TextView back=label("‹  Torna alla Home",17,MUTED,true);back.setOnClickListener(v->showHome());add(page,back);gap(page,20);
+    add(page,label(title,29,WHITE,true));gap(page,18);
+    if(title.equals("Il mio percorso")){
+      add(page,label("Tre esercizi guidati, da svolgere con calma.",18,WHITE,false));gap(page,16);
+      TextView start=pill("▶  Inizia",0xff8250d7,0xff395ec3,WHITE);start.setOnClickListener(v->showExercise(0));add(page,start);
+    }else if(title.equals("Progressi")){
+      add(page,label("Esercizi completati: "+getPreferences(0).getInt("completed",0),22,TEAL,true));
+      gap(page,12);add(page,label("Il conteggio si aggiorna quando registri un esercizio completato.",16,MUTED,false));
+    }else if(title.equals("Promemoria")){
+      add(page,label("I promemoria automatici non sono ancora disponibili in questa versione.",17,WHITE,false));
+    }else if(title.equals("Approfondimenti")){
+      add(page,label("Respirazione e benessere",21,TEAL,true));gap(page,10);
+      add(page,label("Esegui gli esercizi lentamente, senza forzare. Le indicazioni sono educative e non sostituiscono una valutazione sanitaria.",17,WHITE,false));
+    }else{
+      add(page,label("Voce guida",21,TEAL,true));gap(page,10);add(page,label(voiceLabel,15,WHITE,false));gap(page,16);
+      TextView test=pill("▶  Prova la voce",0xff376cb4,0xff7156bf,WHITE);
+      test.setOnClickListener(v->{if(voiceReady)tts.speak("Benvenuto in SOMNIA, la palestra del respiro.",TextToSpeech.QUEUE_FLUSH,null,"test");});add(page,test);
+    }
+    gap(page,25);bottomNavigation();
+  }
+  class MoonLogo extends View{
+    Paint p=new Paint(3);
+    MoonLogo(Context context){super(context);setLayoutParams(new LinearLayout.LayoutParams(-1,dp(190)));}
+    @Override protected void onDraw(Canvas c){super.onDraw(c);float w=getWidth(),h=getHeight(),x=w*.49f,y=h*.49f,r=h*.42f;
+      p.setShader(new LinearGradient(0,0,w,h,new int[]{0xff111d50,0xff4d2592,0xff111c50},null,Shader.TileMode.CLAMP));c.drawRoundRect(0,0,w,h,dp(24),dp(24),p);p.setShader(null);
+      p.setColor(0xffffce74);c.drawCircle(x,y,r,p);p.setColor(0xff23266c);c.drawCircle(x+r*.38f,y-r*.12f,r*.91f,p);
+      p.setStyle(Paint.Style.STROKE);p.setStrokeWidth(dp(4));p.setColor(0xff6fd9ff);
+      Path face=new Path();face.moveTo(x,y-r*.68f);face.cubicTo(x+r*.33f,y-r*.53f,x+r*.30f,y-r*.23f,x+r*.53f,y-r*.12f);face.cubicTo(x+r*.72f,y,x+r*.48f,y+r*.09f,x+r*.58f,y+r*.19f);face.cubicTo(x+r*.77f,y+r*.39f,x+r*.45f,y+r*.44f,x+r*.30f,y+r*.39f);face.cubicTo(x+r*.10f,y+r*.56f,x+r*.22f,y+r*.73f,x+r*.25f,y+r*.86f);c.drawPath(face,p);p.setStyle(Paint.Style.FILL);
+      p.setColor(0xffffe3a1);for(int i=0;i<8;i++)c.drawCircle(w*(.12f+i*.10f),h*(.13f+(i*3%7)*.10f),dp(1.5f),p);
+    }
   }
   void showExercise(int n){
     inExercise=true;exercise=n;if(tts!=null)tts.stop();base();
