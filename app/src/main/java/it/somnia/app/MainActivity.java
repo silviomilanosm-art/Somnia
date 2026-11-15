@@ -112,6 +112,7 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
     TextView prev=pill("‹  Indietro",0xff5955a2,0xff6d66b9,WHITE);prev.setOnClickListener(v->showExercise((exercise+2)%3));nav.addView(prev,new LinearLayout.LayoutParams(0,-2,1));
     View space=new View(this);nav.addView(space,new LinearLayout.LayoutParams(dp(10),1));
     TextView next=pill("Avanti  ›",0xff6964cf,0xff8c6bea,WHITE);next.setOnClickListener(v->showExercise((exercise+1)%3));nav.addView(next,new LinearLayout.LayoutParams(0,-2,1));add(page,nav);
+    gap(page,12);TextView done=pill("✓  Segna come completato",0xff229d99,0xff2d708a,WHITE);done.setOnClickListener(v->{int count=getPreferences(0).getInt("completed",0)+1;getPreferences(0).edit().putInt("completed",count).apply();showSection("Progressi");});add(page,done);
     gap(page,15);add(page,label("Se senti dolore, interrompi l'esercizio. Evita pressioni forti.",12,MUTED,false));
   }
   void speak(){if(!voiceReady){Toast.makeText(this,"Installa o attiva una voce italiana nelle impostazioni di sintesi vocale Android.",Toast.LENGTH_LONG).show();return;}tts.speak(titles[exercise]+". "+desc[exercise],TextToSpeech.QUEUE_FLUSH,null,"somnia-"+exercise);}
